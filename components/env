@@ -1,0 +1,3 @@
+meili_client=http://localhost:7700
+meili_key=KJxAqdceVtDDr5vzvC5LlAvv6NOVlS3cZ9eA4n_Q2fc
+sqldb=mysql+pymysql://root:BabouDiDou+182406@127.0.0.1:3306/9_croquer
