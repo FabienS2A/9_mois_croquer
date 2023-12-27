@@ -9,48 +9,44 @@ engine = create_engine(db_url)
 metadata = MetaData()
 
 def meilei_add(table, list_col):
-    '''table is a string with the name of the table to add, list_col is a list of string representing selected columns to index'''
+    '''table est une chaîne avec le nom de la table à ajouter, list_col est une liste de chaînes représentant les colonnes sélectionnées à indexer'''
     table_obj = Table(table, metadata, autoload_with=engine)
-    with engine.connect() as connection :
+    with engine.connect() as connection:
         result_set = connection.execute(table_obj.select()).fetchall()
-        #Fetching all the table is convenient in developpement but inefficient, should be fixed later
     documents = []
     for row in result_set:
         document = {column.name: getattr(row, column.name) for column in table_obj.columns if column.name in list_col}
         documents.append(document)
-    #workaround for the food table
+    # contournement pour la table 'food'
     if table == 'food':
         client.index(table).update(primary_key='code')
-    client.index(table).add_documents(documents) 
+    client.index(table).add_documents(documents)
 
-    #list of retrieved columns
+# Liste des colonnes récupérées
 list_recipes = ['id', 'name', 'budget', 'difficulty', 'food']
-list_articles = ['id', 'title', 'content' ]
-list_food = [ 'code', 'name']
-list_questions = [ 'id', 'question', 'answer', 'url_article']
-#adding table to meili
+list_articles = ['id', 'title', 'content']
+list_food = ['code', 'name']
+list_questions = ['id', 'question', 'answer', 'url_article']
+
+# Ajout des tables à MeiliSearch
 meilei_add('recipes', list_recipes)
 meilei_add('articles', list_articles)
 meilei_add('food', list_food)
 meilei_add('questions', list_questions)
-
-
 
 app = Flask(__name__)
 
 @app.route("/")
 def moteur_de_recherche():
     search_query = request.args.get('q', '')  # Obtenir le paramètre 'q' de l'URL, en utilisant une chaîne vide comme valeur par défaut
+    index_name = request.args.get('index', '')  # Obtenir le paramètre 'index' de l'URL pour spécifier l'index à rechercher
+
+    if not index_name:
+        
+        return jsonify({"erreur": "Veuillez fournir le paramètre 'index' pour spécifier l'index à rechercher"}), 400
 
     if search_query:
-        resultats_recherche = client.multi_search(
-            [
-                {'indexUid': 'food', 'q': search_query, 'limit': 10},
-                {'indexUid': 'recipes', 'q': search_query, 'limit': 10},
-                {'indexUid': 'articles', 'q': search_query, 'limit': 10},
-                {'indexUid': 'questions', 'q': search_query, 'limit': 10}
-            ]
-        )
+        resultats_recherche = client.index(index_name).search(search_query, {'limit': 10})
         return jsonify(resultats_recherche)
     else:
         return jsonify({"erreur": "Aucune requête de recherche fournie"}), 400
