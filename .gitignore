@@ -6,3 +6,4 @@ config.yml
 docker-compose.yml
 load_data.ipynb
 Meili_tuto.md
+config.py
