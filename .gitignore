@@ -8,3 +8,4 @@ load_data.ipynb
 Meili_tuto.md
 .DS_Store
 config.py
+.env
