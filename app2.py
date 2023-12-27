@@ -43,7 +43,16 @@ def moteur_de_recherche():
 
     if not index_name:
         
-        return jsonify({"erreur": "Veuillez fournir le paramètre 'index' pour spécifier l'index à rechercher"}), 400
+        resultats_sans_index = client.multi_search(
+    [
+        {'indexUid': 'food', 'q': search_query, 'limit': 50},
+        {'indexUid': 'recipes', 'q': search_query, 'limit': 50},
+        {'indexUid': 'articles', 'q': search_query, 'limit': 50},
+        {'indexUid': 'questions', 'q': search_query, 'limit': 50}
+    ]
+)
+
+        return jsonify(resultats_sans_index)
 
     if search_query:
         resultats_recherche = client.index(index_name).search(search_query, {'limit': 10})
