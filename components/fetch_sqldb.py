@@ -6,12 +6,15 @@ import os
 # Charger les variable d'environement à partir du fichier .env situé dans le répertoire components
 load_dotenv()
 meili_env = os.getenv("meili_client")
-meili_key = os.getenv("meili_key")
+#meili_key = os.getenv("meili_key")
 db_url = os.getenv("sqldb")
 
 # Configurer le client meilisearch
 
-client = meilisearch.Client(meili_env, meili_key)
+#si besoin de la meili_key utilisé cette ligne :
+#client = meilisearch.Client(meili_env, meili_key)
+
+client = meilisearch.Client(meili_env)
 
 engine = create_engine(db_url)
 metadata = MetaData()
