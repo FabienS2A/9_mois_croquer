@@ -1,7 +1,21 @@
 import streamlit as st
 import requests
 
-def main():
+import streamlit as st
+import requests
+
+def run_meilisearch_frontend():
+    
+    def single_search(query, index_name):
+        # Effectuer une recherche dans un seul index
+        response = requests.get(f"http://localhost:5000/?q={query}&index={index_name}")
+        return response.json()
+
+    def multi_search(query):
+        # Effectuer une recherche dans tous les index
+        response = requests.get(f"http://localhost:5000/?q={query}")
+        return response.json()
+
     st.title("MeiliSearch Frontend")
 
     # Zone de recherche
@@ -25,15 +39,7 @@ def main():
             # Afficher les résultats
             st.json(results)
 
-def single_search(query, index_name):
-    # Effectuer une recherche dans un seul index
-    response = requests.get(f"http://localhost:5000/?q={query}&index={index_name}")
-    return response.json()
-
-def multi_search(query):
-    # Effectuer une recherche dans tous les index
-    response = requests.get(f"http://localhost:5000/?q={query}")
-    return response.json()
-
 if __name__ == "__main__":
-    main()
+    run_meilisearch_frontend()
+
+
