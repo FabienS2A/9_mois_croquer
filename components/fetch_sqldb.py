@@ -8,10 +8,10 @@ def meili_client():
     load_dotenv(dotenv_path='components/.env')
     meili_env = os.getenv("meili_client")
     meili_key = os.getenv("meili_key")
-    if meili_key == True :
-        client = meilisearch.Client(meili_env, meili_key)
-    else :
+    if meili_key == False :
         client = meilisearch.Client(meili_env)
+    else :
+        client = meilisearch.Client(meili_env, meili_key)
     ''' Configurer l'accés à la data base mysql'''
     db_url = os.getenv("sqldb")
     engine = create_engine(db_url)
