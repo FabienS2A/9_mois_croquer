@@ -16,4 +16,4 @@ Vérification de l'indexage :
 
 En local, se rendre sur "http://localhost:7700" et vérifier le bonne indexages des 4 tables, "recipes", "articles", "food", "questions"
 
-[GitHub](https://github.com)
+
